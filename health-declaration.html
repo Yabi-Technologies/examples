@@ -368,43 +368,9 @@
 
         <button type="submit" class="submit-btn">📤 שלח הצהרה</button>
       </form>
-
-      <!-- Test button to verify Flutter connection -->
-      <button
-        onclick="testFlutterConnection()"
-        style="
-          margin: 20px auto;
-          display: block;
-          padding: 10px 20px;
-          background: #e74c3c;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        "
-      >
-        🧪 Test Flutter Connection
-      </button>
     </div>
 
     <script>
-      // Test function to verify Flutter connection
-      function testFlutterConnection() {
-        try {
-          if (window.onFormCompletion) {
-            window.onFormCompletion.postMessage(
-              "TEST: Flutter connection works!"
-            );
-            alert("Message sent to Flutter! Check your logs.");
-          } else {
-            alert("ERROR: onFormCompletion channel not available!");
-          }
-        } catch (error) {
-          alert("ERROR: " + error.message);
-          console.log("onFormCompletion error:", error);
-        }
-      }
-
       // Show/hide conditional fields
       document
         .querySelectorAll('input[name="chronicDiseases"]')
@@ -535,22 +501,16 @@
           window.scrollTo({ top: 0, behavior: "smooth" });
 
           // Notify Flutter app
-          try {
-            if (window.onFormCompletion) {
-              window.onFormCompletion.postMessage(
-                JSON.stringify({
-                  status: "completed",
-                  formType: "health_declaration",
-                  timestamp: new Date().toISOString(),
-                  data: data,
-                  message: "Health declaration form completed successfully",
-                })
-              );
-            } else {
-              console.log("onFormCompletion channel not available");
-            }
-          } catch (error) {
-            console.log("onFormCompletion channel not available:", error);
+          if (window.onFormCompletion) {
+            window.onFormCompletion.postMessage(
+              JSON.stringify({
+                status: "completed",
+                formType: "health_declaration",
+                timestamp: new Date().toISOString(),
+                data: data,
+                message: "Health declaration form completed successfully",
+              })
+            );
           }
 
           // Optionally reset form after a delay
