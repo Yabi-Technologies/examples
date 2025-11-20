@@ -362,167 +362,195 @@
 
         <button type="submit" class="submit-btn">📤 שלח הצהרה</button>
       </form>
+
+      <!-- Test button to verify Flutter connection -->
+      <button
+        onclick="testFlutterConnection()"
+        style="
+          margin: 20px auto;
+          display: block;
+          padding: 10px 20px;
+          background: #e74c3c;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+      >
+        🧪 Test Flutter Connection
+      </button>
     </div>
 
     <script>
-      // Show/hide conditional fields
-      document
-        .querySelectorAll('input[name="chronicDiseases"]')
-        .forEach((radio) => {
-          radio.addEventListener("change", function () {
-            document.getElementById("chronicDiseasesDetails").style.display =
-              this.value === "yes" ? "block" : "none";
-          });
-        });
-
-      document
-        .querySelectorAll('input[name="regularMedication"]')
-        .forEach((radio) => {
-          radio.addEventListener("change", function () {
-            document.getElementById("medicationDetails").style.display =
-              this.value === "yes" ? "block" : "none";
-          });
-        });
-
-      document.querySelectorAll('input[name="allergies"]').forEach((radio) => {
-        radio.addEventListener("change", function () {
-          document.getElementById("allergiesDetails").style.display =
-            this.value === "yes" ? "block" : "none";
-        });
-      });
-
-      // Handle "no symptoms" checkbox
-      const noSymptomsCheckbox = document.getElementById("noSymptoms");
-      const symptomCheckboxes = document.querySelectorAll(
-        'input[name="symptoms"]:not(#noSymptoms)'
-      );
-
-      noSymptomsCheckbox.addEventListener("change", function () {
-        if (this.checked) {
-          symptomCheckboxes.forEach((cb) => (cb.checked = false));
+        // Test function to verify Flutter connection
+        function testFlutterConnection() {
+          if (window.onFormCompletion) {
+            window.onFormCompletion.postMessage('TEST: Flutter connection works!');
+            alert('Message sent to Flutter! Check your logs.');
+          } else {
+            alert('ERROR: onFormCompletion channel not available!');
+          }
         }
-      });
 
-      symptomCheckboxes.forEach((cb) => {
-        cb.addEventListener("change", function () {
-          if (this.checked) {
-            noSymptomsCheckbox.checked = false;
-          }
-        });
-      });
-
-      // Form validation and submission
-      const form = document.getElementById("healthDeclarationForm");
-
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        // Reset previous errors
+      <script>
+        // Show/hide conditional fields
         document
-          .querySelectorAll(".error")
-          .forEach((el) => el.classList.remove("error"));
+          .querySelectorAll('input[name="chronicDiseases"]')
+          .forEach((radio) => {
+            radio.addEventListener("change", function () {
+              document.getElementById("chronicDiseasesDetails").style.display =
+                this.value === "yes" ? "block" : "none";
+            });
+          });
+
         document
-          .querySelectorAll(".error-message")
-          .forEach((el) => (el.style.display = "none"));
+          .querySelectorAll('input[name="regularMedication"]')
+          .forEach((radio) => {
+            radio.addEventListener("change", function () {
+              document.getElementById("medicationDetails").style.display =
+                this.value === "yes" ? "block" : "none";
+            });
+          });
 
-        let isValid = true;
-
-        // Validate radio groups
-        const radioGroups = [
-          "chronicDiseases",
-          "regularMedication",
-          "allergies",
-        ];
-        radioGroups.forEach((groupName) => {
-          const checked = form.querySelector(
-            `input[name="${groupName}"]:checked`
-          );
-          if (!checked) {
-            const group = form
-              .querySelector(`input[name="${groupName}"]`)
-              .closest(".form-group");
-            const errorMsg = group.querySelector(".error-message");
-            if (errorMsg) errorMsg.style.display = "block";
-            isValid = false;
-          }
+        document.querySelectorAll('input[name="allergies"]').forEach((radio) => {
+          radio.addEventListener("change", function () {
+            document.getElementById("allergiesDetails").style.display =
+              this.value === "yes" ? "block" : "none";
+          });
         });
 
-        // Validate symptoms checkboxes
-        const symptomsChecked = form.querySelectorAll(
-          'input[name="symptoms"]:checked'
+        // Handle "no symptoms" checkbox
+        const noSymptomsCheckbox = document.getElementById("noSymptoms");
+        const symptomCheckboxes = document.querySelectorAll(
+          'input[name="symptoms"]:not(#noSymptoms)'
         );
-        if (symptomsChecked.length === 0) {
-          const symptomsGroup = form
-            .querySelector('input[name="symptoms"]')
-            .closest(".form-group");
-          const errorMsg = symptomsGroup.querySelector(".error-message");
-          if (errorMsg) errorMsg.style.display = "block";
-          isValid = false;
-        }
 
-        // Validate declaration checkbox
-        const declaration = document.getElementById("declaration");
-        if (!declaration.checked) {
-          const errorMsg = declaration
-            .closest(".form-group")
-            .querySelector(".error-message");
-          if (errorMsg) errorMsg.style.display = "block";
-          isValid = false;
-        }
+        noSymptomsCheckbox.addEventListener("change", function () {
+          if (this.checked) {
+            symptomCheckboxes.forEach((cb) => (cb.checked = false));
+          }
+        });
 
-        if (isValid) {
-          // Collect form data
-          const formData = new FormData(form);
-          const data = {};
-          formData.forEach((value, key) => {
-            if (data[key]) {
-              if (Array.isArray(data[key])) {
-                data[key].push(value);
-              } else {
-                data[key] = [data[key], value];
-              }
-            } else {
-              data[key] = value;
+        symptomCheckboxes.forEach((cb) => {
+          cb.addEventListener("change", function () {
+            if (this.checked) {
+              noSymptomsCheckbox.checked = false;
+            }
+          });
+        });
+
+        // Form validation and submission
+        const form = document.getElementById("healthDeclarationForm");
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Reset previous errors
+          document
+            .querySelectorAll(".error")
+            .forEach((el) => el.classList.remove("error"));
+          document
+            .querySelectorAll(".error-message")
+            .forEach((el) => (el.style.display = "none"));
+
+          let isValid = true;
+
+          // Validate radio groups
+          const radioGroups = [
+            "chronicDiseases",
+            "regularMedication",
+            "allergies",
+          ];
+          radioGroups.forEach((groupName) => {
+            const checked = form.querySelector(
+              `input[name="${groupName}"]:checked`
+            );
+            if (!checked) {
+              const group = form
+                .querySelector(`input[name="${groupName}"]`)
+                .closest(".form-group");
+              const errorMsg = group.querySelector(".error-message");
+              if (errorMsg) errorMsg.style.display = "block";
+              isValid = false;
             }
           });
 
-          console.log("Form submitted with data:", data);
-
-          // Show success message
-          document.getElementById("successMessage").style.display = "block";
-
-          // Scroll to top
-          window.scrollTo({ top: 0, behavior: "smooth" });
-
-          // Notify Flutter app
-          if (window.onFormCompletion) {
-            window.onFormCompletion.postMessage(
-              JSON.stringify({
-                status: "completed",
-                formType: "health_declaration",
-                timestamp: new Date().toISOString(),
-                data: data,
-              })
-            );
-          } else {
-            console.log("onFormCompletion channel not available");
-          }
-
-          // Optionally reset form after a delay
-          setTimeout(() => {
-            form.reset();
-            document.getElementById("successMessage").style.display = "none";
-          }, 3000);
-        } else {
-          // Scroll to first error
-          const firstError = form.querySelector(
-            '.error, .error-message[style*="block"]'
+          // Validate symptoms checkboxes
+          const symptomsChecked = form.querySelectorAll(
+            'input[name="symptoms"]:checked'
           );
-          if (firstError) {
-            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (symptomsChecked.length === 0) {
+            const symptomsGroup = form
+              .querySelector('input[name="symptoms"]')
+              .closest(".form-group");
+            const errorMsg = symptomsGroup.querySelector(".error-message");
+            if (errorMsg) errorMsg.style.display = "block";
+            isValid = false;
           }
-        }
-      });
+
+          // Validate declaration checkbox
+          const declaration = document.getElementById("declaration");
+          if (!declaration.checked) {
+            const errorMsg = declaration
+              .closest(".form-group")
+              .querySelector(".error-message");
+            if (errorMsg) errorMsg.style.display = "block";
+            isValid = false;
+          }
+
+          if (isValid) {
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+              if (data[key]) {
+                if (Array.isArray(data[key])) {
+                  data[key].push(value);
+                } else {
+                  data[key] = [data[key], value];
+                }
+              } else {
+                data[key] = value;
+              }
+            });
+
+            console.log("Form submitted with data:", data);
+
+            // Show success message
+            document.getElementById("successMessage").style.display = "block";
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // Notify Flutter app
+            if (window.onFormCompletion) {
+              window.onFormCompletion.postMessage(
+                JSON.stringify({
+                  status: "completed",
+                  formType: "health_declaration",
+                  timestamp: new Date().toISOString(),
+                  data: data,
+                })
+              );
+            } else {
+              console.log("onFormCompletion channel not available");
+            }
+
+            // Optionally reset form after a delay
+            setTimeout(() => {
+              form.reset();
+              document.getElementById("successMessage").style.display = "none";
+            }, 3000);
+          } else {
+            // Scroll to first error
+            const firstError = form.querySelector(
+              '.error, .error-message[style*="block"]'
+            );
+            if (firstError) {
+              firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }
+        });
     </script>
   </body>
 </html>
