@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>הצהרת בריאות</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+        direction: rtl;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 15px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      label .required {
+        color: #e74c3c;
+        margin-right: 3px;
+      }
+
+      input[type="text"],
+      input[type="tel"],
+      input[type="email"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        font-family: inherit;
+      }
+
+      input[type="text"]:focus,
+      input[type="tel"]:focus,
+      input[type="email"]:focus,
+      input[type="date"]:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .checkbox-group {
+        margin: 15px 0;
+      }
+
+      .checkbox-item {
+        margin: 12px 0;
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .checkbox-item label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-weight: normal;
+        margin-bottom: 0;
+      }
+
+      input[type="checkbox"],
+      input[type="radio"] {
+        margin-left: 10px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .radio-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .radio-item label {
+        margin-bottom: 0;
+        font-weight: normal;
+        cursor: pointer;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 20px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:active {
+        transform: translateY(0);
+      }
+
+      .error {
+        border-color: #e74c3c !important;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .success-message {
+        background: #27ae60;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .section-title {
+        color: #667eea;
+        font-size: 20px;
+        margin: 25px 0 15px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📋 הצהרת בריאות</h1>
+
+      <div class="success-message" id="successMessage">
+        ✓ הטופס נשלח בהצלחה!
+      </div>
+
+      <form id="healthDeclarationForm">
+        <!-- מצב בריאותי -->
+        <div class="section-title">מצב בריאותי</div>
+
+        <div class="form-group">
+          <label
+            ><span class="required">*</span> האם אתה סובל ממחלות כרוניות?</label
+          >
+          <div class="radio-group">
+            <div class="radio-item">
+              <label>
+                <input
+                  type="radio"
+                  name="chronicDiseases"
+                  value="yes"
+                  required
+                />
+                כן
+              </label>
+            </div>
+            <div class="radio-item">
+              <label>
+                <input type="radio" name="chronicDiseases" value="no" /> לא
+              </label>
+            </div>
+          </div>
+          <div class="error-message">שדה חובה</div>
+        </div>
+
+        <div
+          class="form-group"
+          id="chronicDiseasesDetails"
+          style="display: none"
+        >
+          <label>פרט את המחלות הכרוניות</label>
+          <textarea
+            id="chronicDiseasesText"
+            name="chronicDiseasesText"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label
+            ><span class="required">*</span> האם אתה נוטל תרופות באופן
+            קבוע?</label
+          >
+          <div class="radio-group">
+            <div class="radio-item">
+              <label>
+                <input
+                  type="radio"
+                  name="regularMedication"
+                  value="yes"
+                  required
+                />
+                כן
+              </label>
+            </div>
+            <div class="radio-item">
+              <label>
+                <input type="radio" name="regularMedication" value="no" /> לא
+              </label>
+            </div>
+          </div>
+          <div class="error-message">שדה חובה</div>
+        </div>
+
+        <div class="form-group" id="medicationDetails" style="display: none">
+          <label>פרט את התרופות</label>
+          <textarea id="medicationText" name="medicationText"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label
+            ><span class="required">*</span> האם יש לך אלרגיות ידועות?</label
+          >
+          <div class="radio-group">
+            <div class="radio-item">
+              <label>
+                <input type="radio" name="allergies" value="yes" required /> כן
+              </label>
+            </div>
+            <div class="radio-item">
+              <label>
+                <input type="radio" name="allergies" value="no" /> לא
+              </label>
+            </div>
+          </div>
+          <div class="error-message">שדה חובה</div>
+        </div>
+
+        <div class="form-group" id="allergiesDetails" style="display: none">
+          <label>פרט את האלרגיות</label>
+          <textarea id="allergiesText" name="allergiesText"></textarea>
+        </div>
+
+        <!-- תסמינים נוכחיים -->
+        <div class="section-title">תסמינים נוכחיים</div>
+
+        <div class="form-group">
+          <label
+            ><span class="required">*</span> האם אתה חש כעת באחד מהתסמינים
+            הבאים?</label
+          >
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <label>
+                <input
+                  type="checkbox"
+                  name="symptoms"
+                  value="none"
+                  id="noSymptoms"
+                />
+                אין תסמינים
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <label>
+                <input type="checkbox" name="symptoms" value="fever" /> חום
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <label>
+                <input type="checkbox" name="symptoms" value="cough" /> שיעול
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <label>
+                <input
+                  type="checkbox"
+                  name="symptoms"
+                  value="shortness_of_breath"
+                />
+                קוצר נשימה
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <label>
+                <input type="checkbox" name="symptoms" value="headache" /> כאב
+                ראש
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <label>
+                <input type="checkbox" name="symptoms" value="fatigue" /> חולשה
+                כללית
+              </label>
+            </div>
+          </div>
+          <div class="error-message">יש לבחור לפחות אפשרות אחת</div>
+        </div>
+
+        <!-- הצהרה -->
+        <div class="section-title">הצהרה</div>
+
+        <div class="form-group">
+          <div class="checkbox-item">
+            <label>
+              <input
+                type="checkbox"
+                id="declaration"
+                name="declaration"
+                required
+              />
+              <span class="required">*</span> אני מצהיר/ה בזאת כי כל המידע
+              שמסרתי הוא נכון ומלא, ואני מודע/ת לכך שמסירת מידע כזב עלולה לגרום
+              לנזק בריאותי לי ולאחרים.
+            </label>
+          </div>
+          <div class="error-message">יש לאשר את ההצהרה</div>
+        </div>
+
+        <button type="submit" class="submit-btn">📤 שלח הצהרה</button>
+      </form>
+    </div>
+
+    <script>
+      // Show/hide conditional fields
+      document
+        .querySelectorAll('input[name="chronicDiseases"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", function () {
+            document.getElementById("chronicDiseasesDetails").style.display =
+              this.value === "yes" ? "block" : "none";
+          });
+        });
+
+      document
+        .querySelectorAll('input[name="regularMedication"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", function () {
+            document.getElementById("medicationDetails").style.display =
+              this.value === "yes" ? "block" : "none";
+          });
+        });
+
+      document.querySelectorAll('input[name="allergies"]').forEach((radio) => {
+        radio.addEventListener("change", function () {
+          document.getElementById("allergiesDetails").style.display =
+            this.value === "yes" ? "block" : "none";
+        });
+      });
+
+      // Handle "no symptoms" checkbox
+      const noSymptomsCheckbox = document.getElementById("noSymptoms");
+      const symptomCheckboxes = document.querySelectorAll(
+        'input[name="symptoms"]:not(#noSymptoms)'
+      );
+
+      noSymptomsCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+          symptomCheckboxes.forEach((cb) => (cb.checked = false));
+        }
+      });
+
+      symptomCheckboxes.forEach((cb) => {
+        cb.addEventListener("change", function () {
+          if (this.checked) {
+            noSymptomsCheckbox.checked = false;
+          }
+        });
+      });
+
+      // Form validation and submission
+      const form = document.getElementById("healthDeclarationForm");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Reset previous errors
+        document
+          .querySelectorAll(".error")
+          .forEach((el) => el.classList.remove("error"));
+        document
+          .querySelectorAll(".error-message")
+          .forEach((el) => (el.style.display = "none"));
+
+        let isValid = true;
+
+        // Validate radio groups
+        const radioGroups = [
+          "chronicDiseases",
+          "regularMedication",
+          "allergies",
+        ];
+        radioGroups.forEach((groupName) => {
+          const checked = form.querySelector(
+            `input[name="${groupName}"]:checked`
+          );
+          if (!checked) {
+            const group = form
+              .querySelector(`input[name="${groupName}"]`)
+              .closest(".form-group");
+            const errorMsg = group.querySelector(".error-message");
+            if (errorMsg) errorMsg.style.display = "block";
+            isValid = false;
+          }
+        });
+
+        // Validate symptoms checkboxes
+        const symptomsChecked = form.querySelectorAll(
+          'input[name="symptoms"]:checked'
+        );
+        if (symptomsChecked.length === 0) {
+          const symptomsGroup = form
+            .querySelector('input[name="symptoms"]')
+            .closest(".form-group");
+          const errorMsg = symptomsGroup.querySelector(".error-message");
+          if (errorMsg) errorMsg.style.display = "block";
+          isValid = false;
+        }
+
+        // Validate declaration checkbox
+        const declaration = document.getElementById("declaration");
+        if (!declaration.checked) {
+          const errorMsg = declaration
+            .closest(".form-group")
+            .querySelector(".error-message");
+          if (errorMsg) errorMsg.style.display = "block";
+          isValid = false;
+        }
+
+        if (isValid) {
+          // Collect form data
+          const formData = new FormData(form);
+          const data = {};
+          formData.forEach((value, key) => {
+            if (data[key]) {
+              if (Array.isArray(data[key])) {
+                data[key].push(value);
+              } else {
+                data[key] = [data[key], value];
+              }
+            } else {
+              data[key] = value;
+            }
+          });
+
+          console.log("Form submitted with data:", data);
+
+          // Show success message
+          document.getElementById("successMessage").style.display = "block";
+
+          // Scroll to top
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          // Notify Flutter app
+          if (window.onFormCompletion) {
+            window.onFormCompletion.postMessage(
+              JSON.stringify({
+                status: "completed",
+                formType: "health_declaration",
+                timestamp: new Date().toISOString(),
+                data: data,
+              })
+            );
+          } else {
+            console.log("onFormCompletion channel not available");
+          }
+
+          // Optionally reset form after a delay
+          setTimeout(() => {
+            form.reset();
+            document.getElementById("successMessage").style.display = "none";
+          }, 3000);
+        } else {
+          // Scroll to first error
+          const firstError = form.querySelector(
+            '.error, .error-message[style*="block"]'
+          );
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
