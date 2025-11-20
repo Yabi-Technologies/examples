@@ -177,6 +177,29 @@
         display: none;
       }
 
+      .thank-you-message {
+        text-align: center;
+        padding: 40px 20px;
+        display: none;
+      }
+
+      .thank-you-message h2 {
+        color: #27ae60;
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .thank-you-message p {
+        color: #555;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .thank-you-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+      }
+
       .section-title {
         color: #667eea;
         font-size: 20px;
@@ -192,6 +215,13 @@
 
       <div class="success-message" id="successMessage">
         ✓ הטופס נשלח בהצלחה!
+      </div>
+
+      <div class="thank-you-message" id="thankYouMessage">
+        <div class="thank-you-icon">✅</div>
+        <h2>תודה רבה!</h2>
+        <p>הצהרת הבריאות שלך נקלטה בהצלחה במערכת.</p>
+        <p>אנו מעריכים את שיתוף הפעולה שלך.</p>
       </div>
 
       <form id="healthDeclarationForm">
@@ -494,8 +524,9 @@
 
           console.log("Form submitted with data:", data);
 
-          // Show success message
-          document.getElementById("successMessage").style.display = "block";
+          // Hide form and show thank you message
+          form.style.display = "none";
+          document.getElementById("thankYouMessage").style.display = "block";
 
           // Scroll to top
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -512,12 +543,6 @@
               })
             );
           }
-
-          // Optionally reset form after a delay
-          setTimeout(() => {
-            form.reset();
-            document.getElementById("successMessage").style.display = "none";
-          }, 3000);
         } else {
           // Scroll to first error
           const firstError = form.querySelector(
