@@ -390,13 +390,18 @@
     <script>
       // Test function to verify Flutter connection
       function testFlutterConnection() {
-        if (window.onFormCompletion) {
-          window.onFormCompletion.postMessage(
-            "TEST: Flutter connection works!"
-          );
-          alert("Message sent to Flutter! Check your logs.");
-        } else {
-          alert("ERROR: onFormCompletion channel not available!");
+        try {
+          if (window.onFormCompletion) {
+            window.onFormCompletion.postMessage(
+              "TEST: Flutter connection works!"
+            );
+            alert("Message sent to Flutter! Check your logs.");
+          } else {
+            alert("ERROR: onFormCompletion channel not available!");
+          }
+        } catch (error) {
+          alert("ERROR: " + error.message);
+          console.log("onFormCompletion error:", error);
         }
       }
 
@@ -530,17 +535,22 @@
           window.scrollTo({ top: 0, behavior: "smooth" });
 
           // Notify Flutter app
-          if (window.onFormCompletion) {
-            window.onFormCompletion.postMessage(
-              JSON.stringify({
-                status: "completed",
-                formType: "health_declaration",
-                timestamp: new Date().toISOString(),
-                data: data,
-              })
-            );
-          } else {
-            console.log("onFormCompletion channel not available");
+          try {
+            if (window.onFormCompletion) {
+              window.onFormCompletion.postMessage(
+                JSON.stringify({
+                  status: "completed",
+                  formType: "health_declaration",
+                  timestamp: new Date().toISOString(),
+                  data: data,
+                  message: "Health declaration form completed successfully",
+                })
+              );
+            } else {
+              console.log("onFormCompletion channel not available");
+            }
+          } catch (error) {
+            console.log("onFormCompletion channel not available:", error);
           }
 
           // Optionally reset form after a delay
