@@ -376,26 +376,6 @@
           <div class="error-message">יש לבחור לפחות אפשרות אחת</div>
         </div>
 
-        <!-- הצהרה -->
-        <div class="section-title">הצהרה</div>
-
-        <div class="form-group">
-          <div class="checkbox-item">
-            <label>
-              <input
-                type="checkbox"
-                id="declaration"
-                name="declaration"
-                required
-              />
-              <span class="required">*</span> אני מצהיר/ה בזאת כי כל המידע
-              שמסרתי הוא נכון ומלא, ואני מודע/ת לכך שמסירת מידע כזב עלולה לגרום
-              לנזק בריאותי לי ולאחרים.
-            </label>
-          </div>
-          <div class="error-message">יש לאשר את ההצהרה</div>
-        </div>
-
         <button type="submit" class="submit-btn">📤 שלח הצהרה</button>
       </form>
     </div>
@@ -492,16 +472,6 @@
             .querySelector('input[name="symptoms"]')
             .closest(".form-group");
           const errorMsg = symptomsGroup.querySelector(".error-message");
-          if (errorMsg) errorMsg.style.display = "block";
-          isValid = false;
-        }
-
-        // Validate declaration checkbox
-        const declaration = document.getElementById("declaration");
-        if (!declaration.checked) {
-          const errorMsg = declaration
-            .closest(".form-group")
-            .querySelector(".error-message");
           if (errorMsg) errorMsg.style.display = "block";
           isValid = false;
         }
