@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quick Create Pass</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 15px;
+        margin: 0;
+        background: #f9f9f9;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        color: #0078d4;
+        margin-top: 0;
+        font-size: 20px;
+      }
+
+      .email-info {
+        background: #f3f3f3;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 13px;
+      }
+
+      .email-info strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .email-info span {
+        color: #666;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .required {
+        color: #d32f2f;
+      }
+
+      .input-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        background: white;
+      }
+
+      input[type='tel'] {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #0078d4;
+      }
+
+      .help-text {
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-top: 10px;
+      }
+
+      .btn-primary {
+        background-color: #0078d4;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background-color: #106ebe;
+      }
+
+      .btn-primary:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .message {
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 15px;
+        display: none;
+        font-size: 13px;
+      }
+
+      .message.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .message.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .message.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .warning {
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 13px;
+      }
+
+      .warning a {
+        color: #0078d4;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #0078d4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>📱 Quick Create Pass</h2>
+
+      <div id="notConfigured" class="warning" style="display: none">
+        ⚠️ Add-in not configured. Please click <strong>Setup</strong> button first to configure your PAPI credentials.
+      </div>
+
+      <div id="emailInfo" class="email-info">
+        <strong>Email Sender:</strong>
+        <span id="senderName">Loading...</span><br />
+        <span id="senderEmail"></span>
+      </div>
+
+      <form id="quickPassForm">
+        <div class="form-group">
+          <label for="countryCode"> Country Code <span class="required">*</span> </label>
+          <select id="countryCode" required>
+            <option value="972">🇮🇱 Israel (+972)</option>
+            <option value="1">🇺🇸 USA/Canada (+1)</option>
+            <option value="44">🇬🇧 UK (+44)</option>
+            <option value="49">🇩🇪 Germany (+49)</option>
+            <option value="33">🇫🇷 France (+33)</option>
+            <option value="39">🇮🇹 Italy (+39)</option>
+            <option value="34">🇪🇸 Spain (+34)</option>
+            <option value="31">🇳🇱 Netherlands (+31)</option>
+            <option value="351">🇵🇹 Portugal (+351)</option>
+            <option value="420">🇨🇿 Czech Republic (+420)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="mobile"> Phone Number <span class="required">*</span> </label>
+          <input type="tel" id="mobile" placeholder="501234567" required pattern="[0-9]{9,15}" />
+          <div class="help-text">Enter without country code (e.g., 501234567)</div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">Create Pass</button>
+      </form>
+
+      <div id="message" class="message"></div>
+    </div>
+
+    <script src="../shared/utils.js"></script>
+    <script src="taskpane.js"></script>
+  </body>
+</html>

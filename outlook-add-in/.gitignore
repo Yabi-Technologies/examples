@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build files
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+
+# Test files
+coverage/
+
+# Office Add-in specific
+.office-cache/
