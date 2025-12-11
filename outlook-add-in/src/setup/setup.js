@@ -1,30 +1,41 @@
 /* global Office */
 
-Office.onReady((info) => {
-  console.log('Office.onReady called', info);
-  if (info.host === Office.HostType.Outlook) {
-    console.log('Setting up event listeners');
-    const form = document.getElementById('setupForm');
-    const testBtn = document.getElementById('testBtn');
-    
-    if (form) {
-      form.addEventListener('submit', handleSave);
-      console.log('Form submit listener added');
-    } else {
-      console.error('setupForm element not found');
-    }
-    
-    if (testBtn) {
-      testBtn.addEventListener('click', handleTest);
-      console.log('Test button listener added');
-    } else {
-      console.error('testBtn element not found');
-    }
-
-    // Load existing configuration
-    loadConfiguration();
-  }
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOMContentLoaded fired');
+  initializeSetup();
 });
+
+// Also try Office.onReady
+if (typeof Office !== 'undefined') {
+  Office.onReady((info) => {
+    console.log('Office.onReady called', info);
+    initializeSetup();
+  });
+}
+
+function initializeSetup() {
+  console.log('Initializing setup');
+  const form = document.getElementById('setupForm');
+  const testBtn = document.getElementById('testBtn');
+  
+  if (form) {
+    form.addEventListener('submit', handleSave);
+    console.log('Form submit listener added');
+  } else {
+    console.error('setupForm element not found');
+  }
+  
+  if (testBtn) {
+    testBtn.addEventListener('click', handleTest);
+    console.log('Test button listener added');
+  } else {
+    console.error('testBtn element not found');
+  }
+
+  // Load existing configuration
+  loadConfiguration();
+}
 
 /**
  * Load existing configuration from storage
