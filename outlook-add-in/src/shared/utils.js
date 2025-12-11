@@ -11,22 +11,18 @@
 async function getConfig() {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.roamingSettings.getAsync((result) => {
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-          const config = {
-            apiUrl: Office.context.roamingSettings.get('apiUrl'),
-            clientId: Office.context.roamingSettings.get('clientId'),
-            apiToken: Office.context.roamingSettings.get('apiToken'),
-            eventId: Office.context.roamingSettings.get('eventId'),
-            systemName: Office.context.roamingSettings.get('systemName') || 'OUTLOOK',
-            systemType: Office.context.roamingSettings.get('systemType') || 'api',
-            sendSmsNewPass: Office.context.roamingSettings.get('sendSmsNewPass') !== false
-          };
-          resolve(config);
-        } else {
-          reject(new Error('Failed to load configuration'));
-        }
-      });
+      const config = {
+        apiUrl: Office.context.roamingSettings.get("apiUrl"),
+        clientId: Office.context.roamingSettings.get("clientId"),
+        apiToken: Office.context.roamingSettings.get("apiToken"),
+        eventId: Office.context.roamingSettings.get("eventId"),
+        systemName:
+          Office.context.roamingSettings.get("systemName") || "OUTLOOK",
+        systemType: Office.context.roamingSettings.get("systemType") || "api",
+        sendSmsNewPass:
+          Office.context.roamingSettings.get("sendSmsNewPass") !== false,
+      };
+      resolve(config);
     } catch (error) {
       reject(error);
     }
@@ -41,19 +37,24 @@ async function getConfig() {
 async function saveConfig(config) {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.roamingSettings.set('apiUrl', config.apiUrl);
-      Office.context.roamingSettings.set('clientId', config.clientId);
-      Office.context.roamingSettings.set('apiToken', config.apiToken);
-      Office.context.roamingSettings.set('eventId', config.eventId);
-      Office.context.roamingSettings.set('systemName', config.systemName);
-      Office.context.roamingSettings.set('systemType', config.systemType);
-      Office.context.roamingSettings.set('sendSmsNewPass', config.sendSmsNewPass);
+      Office.context.roamingSettings.set("apiUrl", config.apiUrl);
+      Office.context.roamingSettings.set("clientId", config.clientId);
+      Office.context.roamingSettings.set("apiToken", config.apiToken);
+      Office.context.roamingSettings.set("eventId", config.eventId);
+      Office.context.roamingSettings.set("systemName", config.systemName);
+      Office.context.roamingSettings.set("systemType", config.systemType);
+      Office.context.roamingSettings.set(
+        "sendSmsNewPass",
+        config.sendSmsNewPass
+      );
 
       Office.context.roamingSettings.saveAsync((result) => {
         if (result.status === Office.AsyncResultStatus.Succeeded) {
           resolve();
         } else {
-          reject(new Error('Failed to save configuration: ' + result.error.message));
+          reject(
+            new Error("Failed to save configuration: " + result.error.message)
+          );
         }
       });
     } catch (error) {
@@ -77,33 +78,33 @@ async function createPass(passData, config) {
       client_id: config.clientId,
       token: config.apiToken,
       send_sms_new_pass: config.sendSmsNewPass,
-      passes: [passData]
+      passes: [passData],
     };
 
     // Make the API request
     const response = await fetch(`${config.apiUrl}/passes`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     // Parse the response
     const result = await response.json();
 
     // Check if the request was successful
-    if (response.ok && result.status === 'success') {
+    if (response.ok && result.status === "success") {
       return {
         success: true,
         data: result,
-        message: 'Pass created successfully'
+        message: "Pass created successfully",
       };
-    } else if (result.status === 'error') {
+    } else if (result.status === "error") {
       return {
         success: false,
-        message: result.message || 'Failed to create pass',
-        error: result
+        message: result.message || "Failed to create pass",
+        error: result,
       };
     } else if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -111,29 +112,35 @@ async function createPass(passData, config) {
 
     return {
       success: false,
-      message: 'Unexpected response from server',
-      error: result
+      message: "Unexpected response from server",
+      error: result,
     };
   } catch (error) {
-    console.error('Error creating pass:', error);
+    console.error("Error creating pass:", error);
 
     // Provide user-friendly error messages
     let errorMessage = error.message;
 
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      errorMessage = 'Network error. Please check your internet connection and API URL.';
-    } else if (error.message.includes('401') || error.message.includes('403')) {
-      errorMessage = 'Authentication failed. Please check your API token in Setup.';
-    } else if (error.message.includes('404')) {
-      errorMessage = 'API endpoint not found. Please verify the API URL in Setup.';
-    } else if (error.message.includes('500')) {
-      errorMessage = 'Server error. Please contact support or try again later.';
+    if (
+      error.message.includes("Failed to fetch") ||
+      error.message.includes("NetworkError")
+    ) {
+      errorMessage =
+        "Network error. Please check your internet connection and API URL.";
+    } else if (error.message.includes("401") || error.message.includes("403")) {
+      errorMessage =
+        "Authentication failed. Please check your API token in Setup.";
+    } else if (error.message.includes("404")) {
+      errorMessage =
+        "API endpoint not found. Please verify the API URL in Setup.";
+    } else if (error.message.includes("500")) {
+      errorMessage = "Server error. Please contact support or try again later.";
     }
 
     return {
       success: false,
       message: errorMessage,
-      error: error
+      error: error,
     };
   }
 }
@@ -164,7 +171,7 @@ function isValidEmail(email) {
  * @returns {string} Formatted error message
  */
 function formatError(error) {
-  if (typeof error === 'string') {
+  if (typeof error === "string") {
     return error;
   }
 
@@ -172,7 +179,7 @@ function formatError(error) {
     return error.message;
   }
 
-  return 'An unknown error occurred';
+  return "An unknown error occurred";
 }
 
 /**
@@ -201,16 +208,21 @@ function getTimestamp() {
  * @returns {string} Sanitized string
  */
 function sanitizeInput(input) {
-  if (typeof input !== 'string') {
+  if (typeof input !== "string") {
     return input;
   }
 
   // Remove any potential script tags or HTML
-  return input.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').trim();
+  return input
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .trim();
 }
 
 // Export functions for testing (if in Node.js environment)
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     getConfig,
     saveConfig,
@@ -220,6 +232,6 @@ if (typeof module !== 'undefined' && module.exports) {
     formatError,
     logEvent,
     getTimestamp,
-    sanitizeInput
+    sanitizeInput,
   };
 }
