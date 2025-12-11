@@ -1,41 +1,33 @@
 /* global Office */
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOMContentLoaded fired');
-  initializeSetup();
-});
+console.log('setup.js loaded');
 
-// Also try Office.onReady
-if (typeof Office !== 'undefined') {
-  Office.onReady((info) => {
-    console.log('Office.onReady called', info);
-    initializeSetup();
-  });
-}
-
+// Try multiple initialization methods
 function initializeSetup() {
-  console.log('Initializing setup');
+  console.log('Attempting to initialize setup');
+  
   const form = document.getElementById('setupForm');
   const testBtn = document.getElementById('testBtn');
   
-  if (form) {
-    form.addEventListener('submit', handleSave);
-    console.log('Form submit listener added');
-  } else {
-    console.error('setupForm element not found');
+  if (!form || !testBtn) {
+    console.log('Elements not ready yet, retrying in 100ms');
+    setTimeout(initializeSetup, 100);
+    return;
   }
   
-  if (testBtn) {
-    testBtn.addEventListener('click', handleTest);
-    console.log('Test button listener added');
-  } else {
-    console.error('testBtn element not found');
-  }
+  console.log('Elements found, attaching listeners');
+  
+  form.addEventListener('submit', handleSave);
+  testBtn.addEventListener('click', handleTest);
+  
+  console.log('Listeners attached successfully');
 
   // Load existing configuration
   loadConfiguration();
 }
+
+// Start initialization immediately
+initializeSetup();
 
 /**
  * Load existing configuration from storage
