@@ -1,9 +1,25 @@
 /* global Office */
 
 Office.onReady((info) => {
+  console.log('Office.onReady called', info);
   if (info.host === Office.HostType.Outlook) {
-    document.getElementById('setupForm').addEventListener('submit', handleSave);
-    document.getElementById('testBtn').addEventListener('click', handleTest);
+    console.log('Setting up event listeners');
+    const form = document.getElementById('setupForm');
+    const testBtn = document.getElementById('testBtn');
+    
+    if (form) {
+      form.addEventListener('submit', handleSave);
+      console.log('Form submit listener added');
+    } else {
+      console.error('setupForm element not found');
+    }
+    
+    if (testBtn) {
+      testBtn.addEventListener('click', handleTest);
+      console.log('Test button listener added');
+    } else {
+      console.error('testBtn element not found');
+    }
 
     // Load existing configuration
     loadConfiguration();
@@ -34,7 +50,11 @@ async function loadConfiguration() {
  * Handle form submission - save configuration
  */
 async function handleSave(event) {
+  console.log('handleSave called', event);
   event.preventDefault();
+  event.stopPropagation();
+
+  alert('Save button clicked!'); // Debug alert
 
   const config = {
     apiUrl: document.getElementById('apiUrl').value.trim(),
@@ -45,6 +65,8 @@ async function handleSave(event) {
     systemType: 'api',
     sendSmsNewPass: true
   };
+
+  console.log('Config to save:', config);
 
   // Validate URL format
   if (!isValidUrl(config.apiUrl)) {
@@ -70,21 +92,27 @@ async function handleSave(event) {
     }, 3000);
   } catch (error) {
     console.error('Error saving configuration:', error);
-    showMessage('Error saving configuration: ' + error.message, 'error');
-  }
-}
-
 /**
  * Test the API connection
  */
 async function handleTest(event) {
+  console.log('handleTest called', event);
   event.preventDefault();
+  event.stopPropagation();
+
+  alert('Test button clicked!'); // Debug alert
 
   const apiUrl = document.getElementById('apiUrl').value.trim();
   const clientId = document.getElementById('clientId').value.trim();
   const apiToken = document.getElementById('apiToken').value.trim();
   const eventId = document.getElementById('eventId').value.trim();
 
+  console.log('Test values:', { apiUrl, clientId, apiToken: '***', eventId });
+
+  if (!apiUrl || !clientId || !apiToken || !eventId) {
+    showMessage('Please fill in all fields before testing', 'error');
+    return;
+  }
   if (!apiUrl || !clientId || !apiToken || !eventId) {
     showMessage('Please fill in all fields before testing', 'error');
     return;
