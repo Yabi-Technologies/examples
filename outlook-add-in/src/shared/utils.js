@@ -11,18 +11,33 @@
 async function getConfig() {
   return new Promise((resolve, reject) => {
     try {
-      const config = {
-        apiUrl: Office.context.roamingSettings.get("apiUrl"),
-        clientId: Office.context.roamingSettings.get("clientId"),
-        apiToken: Office.context.roamingSettings.get("apiToken"),
-        eventId: Office.context.roamingSettings.get("eventId"),
-        systemName:
-          Office.context.roamingSettings.get("systemName") || "OUTLOOK",
-        systemType: Office.context.roamingSettings.get("systemType") || "api",
-        sendSmsNewPass:
-          Office.context.roamingSettings.get("sendSmsNewPass") !== false,
-      };
-      resolve(config);
+      // Try Office roaming settings first
+      if (
+        typeof Office !== "undefined" &&
+        Office.context &&
+        Office.context.roamingSettings
+      ) {
+        const config = {
+          apiUrl: Office.context.roamingSettings.get("apiUrl"),
+          clientId: Office.context.roamingSettings.get("clientId"),
+          apiToken: Office.context.roamingSettings.get("apiToken"),
+          eventId: Office.context.roamingSettings.get("eventId"),
+          systemName:
+            Office.context.roamingSettings.get("systemName") || "OUTLOOK",
+          systemType: Office.context.roamingSettings.get("systemType") || "api",
+          sendSmsNewPass:
+            Office.context.roamingSettings.get("sendSmsNewPass") !== false,
+        };
+        resolve(config);
+      } else {
+        // Fallback to localStorage
+        const stored = localStorage.getItem("papiConfig");
+        if (stored) {
+          resolve(JSON.parse(stored));
+        } else {
+          resolve({});
+        }
+      }
     } catch (error) {
       reject(error);
     }
@@ -37,26 +52,37 @@ async function getConfig() {
 async function saveConfig(config) {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.roamingSettings.set("apiUrl", config.apiUrl);
-      Office.context.roamingSettings.set("clientId", config.clientId);
-      Office.context.roamingSettings.set("apiToken", config.apiToken);
-      Office.context.roamingSettings.set("eventId", config.eventId);
-      Office.context.roamingSettings.set("systemName", config.systemName);
-      Office.context.roamingSettings.set("systemType", config.systemType);
-      Office.context.roamingSettings.set(
-        "sendSmsNewPass",
-        config.sendSmsNewPass
-      );
+      // Try Office roaming settings first
+      if (
+        typeof Office !== "undefined" &&
+        Office.context &&
+        Office.context.roamingSettings
+      ) {
+        Office.context.roamingSettings.set("apiUrl", config.apiUrl);
+        Office.context.roamingSettings.set("clientId", config.clientId);
+        Office.context.roamingSettings.set("apiToken", config.apiToken);
+        Office.context.roamingSettings.set("eventId", config.eventId);
+        Office.context.roamingSettings.set("systemName", config.systemName);
+        Office.context.roamingSettings.set("systemType", config.systemType);
+        Office.context.roamingSettings.set(
+          "sendSmsNewPass",
+          config.sendSmsNewPass
+        );
 
-      Office.context.roamingSettings.saveAsync((result) => {
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-          resolve();
-        } else {
-          reject(
-            new Error("Failed to save configuration: " + result.error.message)
-          );
-        }
-      });
+        Office.context.roamingSettings.saveAsync((result) => {
+          if (result.status === Office.AsyncResultStatus.Succeeded) {
+            resolve();
+          } else {
+            reject(
+              new Error("Failed to save configuration: " + result.error.message)
+            );
+          }
+        });
+      } else {
+        // Fallback to localStorage
+        localStorage.setItem("papiConfig", JSON.stringify(config));
+        resolve();
+      }
     } catch (error) {
       reject(error);
     }

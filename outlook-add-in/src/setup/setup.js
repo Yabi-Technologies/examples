@@ -2,9 +2,13 @@
 
 console.log('setup.js loaded');
 
+// Immediate test
+alert('Setup script is loading!');
+
 // Try multiple initialization methods
 function initializeSetup() {
   console.log('Attempting to initialize setup');
+  alert('Initialize function called');
   
   const form = document.getElementById('setupForm');
   const testBtn = document.getElementById('testBtn');
@@ -15,12 +19,14 @@ function initializeSetup() {
     return;
   }
   
+  alert('Found form and button elements!');
   console.log('Elements found, attaching listeners');
   
   form.addEventListener('submit', handleSave);
   testBtn.addEventListener('click', handleTest);
   
   console.log('Listeners attached successfully');
+  alert('Event listeners attached!');
 
   // Load existing configuration
   loadConfiguration();
