@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Download Keyera</title></head>
+<body>
+<script>
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  if (/android/i.test(userAgent)) {
+    window.location.href = "https://play.google.com/store/apps/details?id=cloud.yabi.keyera";
+  } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    window.location.href = "https://apps.apple.com/il/app/keyera/id6462407687";
+  } else {
+    // Desktop fallback
+    window.location.href = "https://www.yabi.cloud";
+  }
+</script>
+<noscript>
+  <p>Download for <a href="...">iOS</a> or <a href="...">Android</a></p>
+</noscript>
+</body>
+</html>
